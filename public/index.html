@@ -2,9 +2,12 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Engrene 360 — Diagnóstico Empresarial</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#1B2A4A">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Engrene 360</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
 <style>
 :root {
   --navy: #1B2A4A;
@@ -21,132 +24,349 @@
   --red-light: #FCEBEB;
   --amber: #854F0B;
   --amber-light: #FAEEDA;
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
 }
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(--text); min-height: 100vh; font-size: 16px; line-height: 1.6; }
 
-.shell { display: grid; grid-template-columns: 260px 1fr; min-height: 100vh; }
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 
-.sidebar { background: var(--navy); padding: 2.25rem 1.75rem; display: flex; flex-direction: column; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
-.logo { font-family: 'Playfair Display', serif; font-size: 1.4rem; font-weight: 600; color: var(--white); margin-bottom: 0.2rem; }
-.logo-sub { font-size: 0.7rem; color: var(--teal-mid); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 2.5rem; }
-.nav-label { font-size: 0.62rem; letter-spacing: 0.15em; text-transform: uppercase; color: rgba(255,255,255,0.3); margin-bottom: 0.75rem; }
-.nav-item { display: flex; align-items: center; gap: 0.7rem; padding: 0.55rem 0; font-size: 0.82rem; color: rgba(255,255,255,0.4); border-bottom: 1px solid rgba(255,255,255,0.05); }
-.nav-item.active { color: var(--teal-mid); }
-.nav-item.done { color: rgba(255,255,255,0.55); }
-.nav-dot { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,0.18); flex-shrink: 0; }
-.nav-item.active .nav-dot { background: var(--teal); }
-.nav-item.done .nav-dot { background: rgba(159,225,203,0.45); }
-.sidebar-footer { margin-top: auto; padding-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.07); }
-.sidebar-footer p { font-size: 0.7rem; color: rgba(255,255,255,0.22); line-height: 1.6; }
+html { height: 100%; }
 
-.main { display: flex; flex-direction: column; min-height: 100vh; }
-.progress-bar { height: 3px; background: var(--border); position: sticky; top: 0; z-index: 10; }
+body {
+  font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--cream);
+  color: var(--text);
+  height: 100%;
+  font-size: 16px;
+  line-height: 1.6;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── MOBILE HEADER ── */
+.mob-header {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  background: var(--navy);
+  padding: calc(var(--safe-top) + 12px) 20px 12px;
+  align-items: center;
+  justify-content: space-between;
+}
+.mob-logo { font-family: 'Playfair Display', serif; font-size: 1.15rem; font-weight: 600; color: var(--white); }
+.mob-step { font-size: 0.7rem; color: var(--teal-mid); letter-spacing: 0.1em; text-transform: uppercase; }
+
+/* ── PROGRESS ── */
+.progress-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: rgba(255,255,255,0.15);
+  z-index: 200;
+}
 .progress-fill { height: 100%; background: linear-gradient(90deg, var(--teal), var(--gold)); transition: width 0.5s ease; }
 
-.content { flex: 1; padding: 3.25rem 2.75rem; max-width: 700px; }
-.step-badge { display: inline-flex; align-items: center; gap: 0.5rem; font-size: 0.68rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--teal); font-weight: 500; margin-bottom: 1.25rem; }
-.step-badge::before { content: ''; display: block; width: 18px; height: 1px; background: var(--teal); }
-.q-title { font-family: 'Playfair Display', serif; font-size: 1.65rem; font-weight: 400; color: var(--navy); line-height: 1.35; margin-bottom: 0.65rem; }
-.q-hint { font-size: 0.88rem; color: var(--muted); line-height: 1.65; margin-bottom: 1.75rem; padding-left: 1rem; border-left: 2px solid var(--border); }
+/* ── DESKTOP SHELL ── */
+.shell { display: grid; grid-template-columns: 240px 1fr; min-height: 100vh; }
 
-textarea { width: 100%; min-height: 130px; padding: 0.9rem 1.1rem; font-family: 'DM Sans', sans-serif; font-size: 0.93rem; color: var(--text); background: var(--white); border: 1.5px solid var(--border); border-radius: 8px; resize: vertical; line-height: 1.65; transition: border-color 0.2s; outline: none; }
+/* ── SIDEBAR DESKTOP ── */
+.sidebar {
+  background: var(--navy);
+  padding: 2rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+}
+.logo { font-family: 'Playfair Display', serif; font-size: 1.3rem; font-weight: 600; color: var(--white); margin-bottom: 0.2rem; }
+.logo-sub { font-size: 0.65rem; color: var(--teal-mid); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 2rem; }
+.nav-label { font-size: 0.6rem; letter-spacing: 0.15em; text-transform: uppercase; color: rgba(255,255,255,0.3); margin-bottom: 0.65rem; }
+.nav-item { display: flex; align-items: center; gap: 0.65rem; padding: 0.5rem 0; font-size: 0.8rem; color: rgba(255,255,255,0.38); border-bottom: 1px solid rgba(255,255,255,0.05); }
+.nav-item.active { color: var(--teal-mid); }
+.nav-item.done { color: rgba(255,255,255,0.52); }
+.nav-dot { width: 5px; height: 5px; border-radius: 50%; background: rgba(255,255,255,0.15); flex-shrink: 0; }
+.nav-item.active .nav-dot { background: var(--teal); }
+.nav-item.done .nav-dot { background: rgba(159,225,203,0.4); }
+.sidebar-footer { margin-top: auto; padding-top: 1.25rem; border-top: 1px solid rgba(255,255,255,0.07); }
+.sidebar-footer p { font-size: 0.67rem; color: rgba(255,255,255,0.2); line-height: 1.6; }
+
+/* ── MAIN ── */
+.main { display: flex; flex-direction: column; min-height: 100vh; }
+
+/* ── CONTENT (form steps) ── */
+.content { flex: 1; padding: 2.5rem 2.25rem; max-width: 640px; }
+
+.step-badge {
+  display: inline-flex; align-items: center; gap: 0.45rem;
+  font-size: 0.65rem; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--teal); font-weight: 500; margin-bottom: 1.1rem;
+}
+.step-badge::before { content: ''; display: block; width: 16px; height: 1px; background: var(--teal); }
+
+.q-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(1.35rem, 4vw, 1.6rem);
+  font-weight: 400; color: var(--navy); line-height: 1.3; margin-bottom: 0.6rem;
+}
+.q-hint {
+  font-size: 0.86rem; color: var(--muted); line-height: 1.65;
+  margin-bottom: 1.5rem; padding-left: 0.9rem; border-left: 2px solid var(--border);
+}
+
+/* ── INPUTS ── */
+textarea {
+  width: 100%; min-height: 120px;
+  padding: 0.9rem 1rem;
+  font-family: 'DM Sans', sans-serif; font-size: 1rem;
+  color: var(--text); background: var(--white);
+  border: 1.5px solid var(--border); border-radius: 10px;
+  resize: vertical; line-height: 1.6; transition: border-color 0.2s; outline: none;
+  -webkit-appearance: none;
+}
 textarea:focus { border-color: var(--teal); }
-.options-list { display: flex; flex-direction: column; gap: 0.6rem; }
-.opt { padding: 0.9rem 1.15rem; background: var(--white); border: 1.5px solid var(--border); border-radius: 8px; cursor: pointer; font-size: 0.9rem; color: var(--text); text-align: left; transition: all 0.18s; line-height: 1.5; }
-.opt:hover { border-color: var(--teal); background: var(--teal-light); }
+
+.options-list { display: flex; flex-direction: column; gap: 0.55rem; }
+.opt {
+  padding: 1rem 1.1rem;
+  background: var(--white); border: 1.5px solid var(--border);
+  border-radius: 10px; cursor: pointer; font-size: 0.92rem;
+  color: var(--text); text-align: left; transition: all 0.18s; line-height: 1.5;
+  -webkit-appearance: none; width: 100%;
+  /* bigger tap target */
+  min-height: 52px; display: flex; align-items: center;
+}
+.opt:active { transform: scale(0.99); }
 .opt.selected { border-color: var(--teal); background: var(--teal-light); color: var(--navy); font-weight: 500; }
-.scale-wrap { display: flex; gap: 0.45rem; flex-wrap: wrap; }
-.scale-btn { width: 50px; height: 50px; border-radius: 8px; border: 1.5px solid var(--border); background: var(--white); font-size: 0.92rem; font-weight: 500; cursor: pointer; color: var(--text); transition: all 0.18s; }
-.scale-btn:hover { border-color: var(--teal); }
+
+.scale-wrap { display: flex; gap: 0.4rem; flex-wrap: nowrap; justify-content: space-between; }
+.scale-btn {
+  flex: 1; min-width: 0; aspect-ratio: 1;
+  border-radius: 8px; border: 1.5px solid var(--border);
+  background: var(--white); font-size: 0.88rem; font-weight: 500;
+  cursor: pointer; color: var(--text); transition: all 0.18s;
+  display: flex; align-items: center; justify-content: center;
+  -webkit-appearance: none;
+}
+.scale-btn:active { transform: scale(0.95); }
 .scale-btn.selected { background: var(--teal); border-color: var(--teal); color: var(--white); }
-.scale-labels { display: flex; justify-content: space-between; margin-top: 0.45rem; font-size: 0.72rem; color: var(--muted); }
+.scale-labels { display: flex; justify-content: space-between; margin-top: 0.5rem; font-size: 0.7rem; color: var(--muted); }
 
-.nav-buttons { display: flex; justify-content: space-between; align-items: center; margin-top: 2.25rem; padding-top: 1.75rem; border-top: 1px solid var(--border); }
-.btn-back { font-size: 0.86rem; color: var(--muted); background: none; border: none; cursor: pointer; padding: 0.5rem 0; transition: color 0.2s; }
-.btn-back:hover { color: var(--text); }
-.btn-next { display: inline-flex; align-items: center; gap: 0.55rem; padding: 0.8rem 1.9rem; background: var(--navy); color: var(--white); border: none; border-radius: 8px; font-family: 'DM Sans', sans-serif; font-size: 0.88rem; font-weight: 500; cursor: pointer; transition: all 0.2s; letter-spacing: 0.02em; }
-.btn-next:hover { background: var(--teal); }
-.btn-next:disabled { opacity: 0.35; cursor: not-allowed; background: var(--navy); }
+/* ── NAV BUTTONS ── */
+.nav-buttons {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid var(--border);
+  padding-bottom: calc(var(--safe-bottom) + 8px);
+}
+.btn-back {
+  font-size: 0.88rem; color: var(--muted); background: none;
+  border: none; cursor: pointer; padding: 0.75rem 0; transition: color 0.2s;
+  min-height: 48px;
+}
+.btn-next {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  padding: 0.9rem 1.75rem; background: var(--navy); color: var(--white);
+  border: none; border-radius: 10px;
+  font-family: 'DM Sans', sans-serif; font-size: 0.9rem; font-weight: 500;
+  cursor: pointer; transition: all 0.2s; letter-spacing: 0.02em;
+  min-height: 52px; -webkit-appearance: none;
+}
+.btn-next:active { transform: scale(0.98); background: var(--teal); }
+.btn-next:disabled { opacity: 0.35; cursor: not-allowed; }
 
-/* CHAT */
-.chat-screen { display: flex; flex-direction: column; height: 100vh; }
-.chat-header { padding: 1.35rem 2.25rem; border-bottom: 1px solid var(--border); background: var(--white); }
-.chat-header h2 { font-family: 'Playfair Display', serif; font-size: 1.1rem; color: var(--navy); font-weight: 400; }
-.chat-header p { font-size: 0.78rem; color: var(--muted); margin-top: 0.15rem; }
-.chat-messages { flex: 1; overflow-y: auto; padding: 1.75rem 2.25rem; display: flex; flex-direction: column; gap: 1.35rem; }
-.msg { display: flex; gap: 0.9rem; max-width: 88%; animation: fadeUp 0.3s ease; }
-@keyframes fadeUp { from { opacity: 0; transform: translateY(7px); } to { opacity: 1; transform: translateY(0); } }
+/* ── INTRO ── */
+.intro-block { max-width: 540px; }
+.intro-tag {
+  display: inline-block; padding: 0.28rem 0.85rem;
+  background: var(--teal-light); color: var(--teal);
+  border-radius: 99px; font-size: 0.68rem; font-weight: 500;
+  letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 1.4rem;
+}
+.intro-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(1.75rem, 5vw, 2.2rem);
+  font-weight: 400; color: var(--navy); line-height: 1.2; margin-bottom: 1rem;
+}
+.intro-title em { font-style: italic; color: var(--teal); }
+.intro-body { font-size: 0.92rem; color: var(--muted); line-height: 1.75; margin-bottom: 1.5rem; }
+.intro-items { display: grid; grid-template-columns: 1fr 1fr; gap: 0.55rem; margin-bottom: 2rem; }
+.intro-item { display: flex; align-items: flex-start; gap: 0.5rem; font-size: 0.8rem; color: var(--muted); line-height: 1.45; }
+.intro-item::before { content: '—'; color: var(--teal); flex-shrink: 0; }
+.btn-start {
+  display: flex; align-items: center; justify-content: center; gap: 0.65rem;
+  width: 100%; padding: 1rem 2rem; background: var(--navy); color: var(--white);
+  border: none; border-radius: 12px;
+  font-family: 'DM Sans', sans-serif; font-size: 0.95rem; font-weight: 500;
+  cursor: pointer; transition: all 0.2s; min-height: 56px;
+  -webkit-appearance: none;
+}
+.btn-start:active { background: var(--teal); transform: scale(0.99); }
+
+/* ── CHAT ── */
+.chat-screen {
+  display: flex; flex-direction: column;
+  height: 100dvh; /* dynamic viewport height — handles mobile keyboard */
+  height: 100vh; /* fallback */
+  background: var(--cream);
+}
+.chat-header {
+  padding: 1.1rem 1.5rem; border-bottom: 1px solid var(--border);
+  background: var(--white); flex-shrink: 0;
+}
+.chat-header h2 { font-family: 'Playfair Display', serif; font-size: 1rem; color: var(--navy); font-weight: 400; }
+.chat-header p { font-size: 0.74rem; color: var(--muted); margin-top: 0.1rem; }
+
+.chat-messages {
+  flex: 1; overflow-y: auto; overflow-x: hidden;
+  padding: 1.25rem 1.25rem 0.5rem;
+  display: flex; flex-direction: column; gap: 1.1rem;
+  /* momentum scroll on iOS */
+  -webkit-overflow-scrolling: touch;
+}
+
+.msg { display: flex; gap: 0.75rem; max-width: 92%; animation: fadeUp 0.25s ease; }
+@keyframes fadeUp { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
 .msg.agent { align-self: flex-start; }
-.msg.user { align-self: flex-end; flex-direction: row-reverse; }
-.msg-av { width: 34px; height: 34px; border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 0.72rem; font-weight: 600; margin-top: 2px; }
+.msg.user { align-self: flex-end; flex-direction: row-reverse; max-width: 85%; }
+
+.msg-av {
+  width: 32px; height: 32px; border-radius: 50%; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.68rem; font-weight: 600; margin-top: 2px;
+}
 .msg.agent .msg-av { background: var(--navy); color: var(--teal-mid); }
 .msg.user .msg-av { background: var(--teal-light); color: var(--teal); }
-.msg-bubble { padding: 0.9rem 1.15rem; border-radius: 12px; font-size: 0.9rem; line-height: 1.65; }
-.msg.agent .msg-bubble { background: var(--white); border: 1px solid var(--border); color: var(--text); border-top-left-radius: 2px; }
-.msg.user .msg-bubble { background: var(--navy); color: rgba(255,255,255,0.9); border-top-right-radius: 2px; }
-.msg-bubble p { margin-bottom: 0.45rem; }
+
+.msg-bubble { padding: 0.85rem 1rem; border-radius: 14px; font-size: 0.92rem; line-height: 1.65; word-break: break-word; }
+.msg.agent .msg-bubble { background: var(--white); border: 1px solid var(--border); color: var(--text); border-top-left-radius: 3px; }
+.msg.user .msg-bubble { background: var(--navy); color: rgba(255,255,255,0.92); border-top-right-radius: 3px; }
+.msg-bubble p { margin-bottom: 0.4rem; }
 .msg-bubble p:last-child { margin-bottom: 0; }
-.typing { display: flex; align-items: center; gap: 4px; padding: 0.6rem 0.75rem; }
+
+.typing { display: flex; align-items: center; gap: 4px; padding: 0.5rem 0.65rem; }
 .typing span { width: 7px; height: 7px; border-radius: 50%; background: var(--muted); animation: bounce 1.2s infinite; }
 .typing span:nth-child(2) { animation-delay: 0.2s; }
 .typing span:nth-child(3) { animation-delay: 0.4s; }
-@keyframes bounce { 0%,60%,100% { transform:translateY(0); } 30% { transform:translateY(-6px); } }
-.chat-input-area { padding: 1.1rem 2.25rem; border-top: 1px solid var(--border); background: var(--white); display: flex; gap: 0.85rem; align-items: flex-end; }
-.chat-input { flex: 1; padding: 0.8rem 1rem; font-family: 'DM Sans', sans-serif; font-size: 0.9rem; border: 1.5px solid var(--border); border-radius: 8px; resize: none; min-height: 46px; max-height: 150px; outline: none; transition: border-color 0.2s; line-height: 1.5; color: var(--text); background: var(--cream); }
+@keyframes bounce { 0%,60%,100% { transform:translateY(0); } 30% { transform:translateY(-5px); } }
+
+.chat-input-area {
+  padding: 0.85rem 1.1rem calc(var(--safe-bottom) + 0.85rem);
+  border-top: 1px solid var(--border); background: var(--white);
+  display: flex; gap: 0.65rem; align-items: flex-end; flex-shrink: 0;
+}
+.chat-input {
+  flex: 1; padding: 0.75rem 0.9rem;
+  font-family: 'DM Sans', sans-serif; font-size: 1rem;
+  border: 1.5px solid var(--border); border-radius: 10px;
+  resize: none; min-height: 46px; max-height: 120px;
+  outline: none; transition: border-color 0.2s;
+  line-height: 1.5; color: var(--text); background: var(--cream);
+  -webkit-appearance: none;
+}
 .chat-input:focus { border-color: var(--teal); background: var(--white); }
-.btn-send { width: 46px; height: 46px; background: var(--navy); border: none; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: background 0.2s; color: white; font-size: 1rem; }
-.btn-send:hover { background: var(--teal); }
-.btn-send:disabled { opacity: 0.35; cursor: not-allowed; background: var(--navy); }
+.btn-send {
+  width: 46px; height: 46px; background: var(--navy);
+  border: none; border-radius: 10px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; transition: background 0.2s; color: white;
+  font-size: 1.1rem; -webkit-appearance: none;
+}
+.btn-send:active { background: var(--teal); transform: scale(0.95); }
+.btn-send:disabled { opacity: 0.35; }
 
-/* INTRO */
-.intro-block { max-width: 540px; }
-.intro-tag { display: inline-block; padding: 0.28rem 0.85rem; background: var(--teal-light); color: var(--teal); border-radius: 99px; font-size: 0.7rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 1.6rem; }
-.intro-title { font-family: 'Playfair Display', serif; font-size: 2.3rem; font-weight: 400; color: var(--navy); line-height: 1.22; margin-bottom: 1.1rem; }
-.intro-title em { font-style: italic; color: var(--teal); }
-.intro-body { font-size: 0.92rem; color: var(--muted); line-height: 1.75; margin-bottom: 1.75rem; }
-.intro-items { display: grid; grid-template-columns: 1fr 1fr; gap: 0.65rem; margin-bottom: 2.25rem; }
-.intro-item { display: flex; align-items: flex-start; gap: 0.55rem; font-size: 0.82rem; color: var(--muted); line-height: 1.45; }
-.intro-item::before { content: '—'; color: var(--teal); flex-shrink: 0; margin-top: 1px; }
-.btn-start { display: inline-flex; align-items: center; gap: 0.7rem; padding: 0.95rem 2.1rem; background: var(--navy); color: var(--white); border: none; border-radius: 8px; font-family: 'DM Sans', sans-serif; font-size: 0.92rem; font-weight: 500; cursor: pointer; transition: all 0.2s; }
-.btn-start:hover { background: var(--teal); transform: translateY(-1px); }
-
-/* RELATÓRIO */
-.report-wrap { padding: 2.75rem; max-width: 740px; }
-.report-hdr { margin-bottom: 2.25rem; padding-bottom: 1.35rem; border-bottom: 1px solid var(--border); }
-.report-hdr h1 { font-family: 'Playfair Display', serif; font-size: 1.85rem; color: var(--navy); font-weight: 400; margin-bottom: 0.4rem; }
-.report-hdr p { font-size: 0.85rem; color: var(--muted); }
-.r-section { margin-bottom: 2.25rem; }
-.r-title { font-size: 0.65rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--teal); font-weight: 600; margin-bottom: 0.9rem; display: flex; align-items: center; gap: 0.7rem; }
+/* ── REPORT ── */
+.report-wrap { padding: 1.5rem; max-width: 680px; }
+.report-hdr { margin-bottom: 1.75rem; padding-bottom: 1.1rem; border-bottom: 1px solid var(--border); }
+.report-hdr h1 { font-family: 'Playfair Display', serif; font-size: 1.6rem; color: var(--navy); font-weight: 400; margin-bottom: 0.35rem; }
+.report-hdr p { font-size: 0.82rem; color: var(--muted); }
+.r-section { margin-bottom: 1.75rem; }
+.r-title {
+  font-size: 0.62rem; letter-spacing: 0.16em; text-transform: uppercase;
+  color: var(--teal); font-weight: 600; margin-bottom: 0.75rem;
+  display: flex; align-items: center; gap: 0.6rem;
+}
 .r-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
-.r-card { background: var(--white); border: 1px solid var(--border); border-radius: 10px; padding: 1.15rem 1.4rem; margin-bottom: 0.65rem; }
-.crit { display: inline-block; padding: 0.18rem 0.65rem; border-radius: 99px; font-size: 0.68rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 0.5rem; }
+.r-card { background: var(--white); border: 1px solid var(--border); border-radius: 10px; padding: 1rem 1.2rem; margin-bottom: 0.55rem; }
+.crit { display: inline-block; padding: 0.17rem 0.6rem; border-radius: 99px; font-size: 0.65rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 0.45rem; }
 .alta { background: var(--red-light); color: var(--red); }
 .media { background: var(--amber-light); color: var(--amber); }
 .baixa { background: var(--teal-light); color: var(--teal); }
-.r-card h3 { font-size: 0.95rem; font-weight: 600; color: var(--navy); margin-bottom: 0.35rem; }
-.r-card p { font-size: 0.86rem; color: var(--muted); line-height: 1.6; }
-.fase-pill { display: inline-flex; align-items: center; gap: 0.45rem; padding: 0.45rem 0.95rem; background: var(--navy); color: var(--teal-mid); border-radius: 99px; font-size: 0.8rem; font-weight: 500; margin-bottom: 0.85rem; }
+.r-card h3 { font-size: 0.92rem; font-weight: 600; color: var(--navy); margin-bottom: 0.3rem; }
+.r-card p { font-size: 0.84rem; color: var(--muted); line-height: 1.6; }
+.fase-pill { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.4rem 0.85rem; background: var(--navy); color: var(--teal-mid); border-radius: 99px; font-size: 0.78rem; font-weight: 500; margin-bottom: 0.75rem; }
 .action-list { list-style: none; }
-.action-list li { display: flex; gap: 0.9rem; align-items: flex-start; padding: 0.8rem 0; border-bottom: 1px solid var(--border); font-size: 0.88rem; color: var(--text); line-height: 1.55; }
+.action-list li { display: flex; gap: 0.75rem; align-items: flex-start; padding: 0.75rem 0; border-bottom: 1px solid var(--border); font-size: 0.86rem; color: var(--text); line-height: 1.55; }
 .action-list li:last-child { border-bottom: none; }
-.a-num { width: 24px; height: 24px; border-radius: 50%; background: var(--teal-light); color: var(--teal); font-size: 0.72rem; font-weight: 600; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
-.report-footer { background: var(--teal-light); border: 1px solid rgba(29,158,117,0.2); border-radius: 10px; padding: 1.15rem 1.4rem; font-size: 0.86rem; color: var(--navy); line-height: 1.65; margin-top: 1.75rem; }
-.spinner { width: 18px; height: 18px; border: 2px solid var(--border); border-top-color: var(--teal); border-radius: 50%; animation: spin 0.7s linear infinite; display: inline-block; }
-@keyframes spin { to { transform: rotate(360deg); } }
+.a-num { width: 22px; height: 22px; border-radius: 50%; background: var(--teal-light); color: var(--teal); font-size: 0.68rem; font-weight: 600; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+.report-footer { background: var(--teal-light); border: 1px solid rgba(29,158,117,0.2); border-radius: 10px; padding: 1rem 1.2rem; font-size: 0.84rem; color: var(--navy); line-height: 1.65; margin-top: 1.5rem; }
 
-@media (max-width: 768px) {
-  .shell { grid-template-columns: 1fr; }
+/* ── RESPONSIVE: MOBILE ── */
+@media (max-width: 640px) {
+  /* Hide desktop sidebar, show mobile header */
   .sidebar { display: none; }
-  .content { padding: 1.75rem 1.35rem; }
-  .intro-items { grid-template-columns: 1fr; }
-  .chat-messages { padding: 1.25rem; }
-  .chat-input-area { padding: 0.9rem 1.25rem; }
-  .report-wrap { padding: 1.35rem; }
+  .shell { grid-template-columns: 1fr; }
+  .mob-header { display: flex; }
+
+  /* Push content below fixed header */
+  .main { padding-top: calc(var(--safe-top) + 52px); }
+
+  /* Progress bar below header */
+  .progress-bar { top: calc(var(--safe-top) + 48px); }
+
+  .content {
+    padding: 1.5rem 1.25rem;
+    padding-bottom: calc(var(--safe-bottom) + 1rem);
+  }
+
+  .q-title { font-size: 1.35rem; }
+
+  .intro-items { grid-template-columns: 1fr; gap: 0.5rem; }
+  .intro-title { font-size: 1.75rem; }
+
+  .scale-wrap { gap: 0.28rem; }
+  .scale-btn { font-size: 0.8rem; }
+
+  .chat-header { padding: 0.85rem 1.1rem; }
+  .chat-messages { padding: 1rem 1rem 0.5rem; }
+  .chat-input-area { padding: 0.75rem 1rem calc(var(--safe-bottom) + 0.75rem); }
+
+  .report-wrap { padding: 1rem; }
+  .report-hdr h1 { font-size: 1.35rem; }
+
+  .nav-buttons { margin-top: 1.5rem; }
+  .btn-next { padding: 0.9rem 1.5rem; width: auto; }
+}
+
+/* ── VERY SMALL SCREENS ── */
+@media (max-width: 360px) {
+  .q-title { font-size: 1.2rem; }
+  .intro-title { font-size: 1.5rem; }
+  .scale-btn { font-size: 0.75rem; }
+}
+
+/* ── TABLET ── */
+@media (min-width: 641px) and (max-width: 900px) {
+  .shell { grid-template-columns: 200px 1fr; }
+  .content { padding: 2rem 1.75rem; }
 }
 </style>
 </head>
 <body>
+
+<!-- MOBILE HEADER -->
+<div class="mob-header" id="mob-header">
+  <span class="mob-logo">Engrene 360</span>
+  <span class="mob-step" id="mob-step"></span>
+</div>
+
+<div class="progress-bar"><div class="progress-fill" id="prog" style="width:0%"></div></div>
+
 <div class="shell">
   <aside class="sidebar">
     <div class="logo">Engrene 360</div>
@@ -158,24 +378,26 @@ textarea:focus { border-color: var(--teal); }
     </div>
   </aside>
   <main class="main" id="main">
-    <div class="progress-bar"><div class="progress-fill" id="prog" style="width:0%"></div></div>
     <div id="screen"></div>
   </main>
 </div>
 
 <script>
-// ─── SYSTEM PROMPT ───
 const SYS = `Você é o Agente Engrene 360 — a extensão digital de Eliudem Galvão, consultor estratégico com mais de 20 anos de experiência. Você é um sócio que se importa genuinamente com o sucesso do empresário. Trata-o como um ser humano completo: físico, mental, espiritual e relacional. Seus princípios são cristãos: propósito antes de lucro, humildade como força, integridade como base.
 
 REGRA FUNDAMENTAL — 60/40:
 Você escuta 60% e fala 40%. Isso significa:
 - Cada resposta termina com UMA única pergunta — nunca duas, nunca nenhuma
+- PROIBIDO fazer duas perguntas na mesma mensagem, mesmo que pareçam relacionadas
+- PROIBIDO encadear perguntas com "e também", "ou seja", "mas antes disso"
+- Se sentir vontade de fazer duas perguntas, escolha a mais importante e guarde a outra para depois
 - Máximo 3 parágrafos curtos por resposta
 - Você nunca despeja análise — conduz o empresário a chegar às conclusões por conta própria
-- Se está escrevendo mais de 5 linhas sem uma pergunta, parou de escutar
+
+CHECAGEM OBRIGATÓRIA ANTES DE ENVIAR: conte quantas perguntas há na mensagem. Se for mais de uma — apague todas e escolha apenas a mais importante.
 
 REGRA CRÍTICA — PRÉ-DIAGNÓSTICO SÃO HIPÓTESES, NUNCA CONCLUSÕES:
-As respostas do formulário são sinais de investigação — nunca diagnóstico. Um empresário que marcou "vendas caindo" pode ter dezenas de causas: posicionamento, equipe, preço, produto, concorrência, processo comercial, cliente ideal errado, entre muitos outros. Você NUNCA assume a causa. Você pergunta até entender com profundidade. Diagnóstico prematuro é o maior erro que pode cometer.
+As respostas do formulário são sinais de investigação — nunca diagnóstico. Um empresário que marcou qualquer opção pode ter dezenas de causas diferentes por trás. Você NUNCA assume a causa. Você pergunta até entender com profundidade. Diagnóstico prematuro é o maior erro que pode cometer.
 
 POSTURA:
 - Nunca genérico: toda resposta parte daquele empresário específico
@@ -194,17 +416,17 @@ LEITURA DO ESTADO EMOCIONAL:
 - Clareza: vai direto à pergunta mais importante
 
 METAPROGRAMAS — PROVOCA O PENSAMENTO COMPLEMENTAR:
-- Otimista: "Essa oportunidade é real. O que pode dar errado que você ainda não está vendo?"
-- Pessimista: "Esse risco existe. O que você ganha se ele não se concretizar?"
-- Detalhista: "Você domina os números. E quando olha o negócio inteiro de fora — o que os números não mostram?"
-- Visionário: "A visão está clara. O que você vai fazer amanhã de manhã que move isso?"
-- Curto prazo: "Faz sentido agora. Daqui a 3 anos, o que essa decisão vai ter construído ou destruído?"
+- Otimista: valida e pergunta os riscos que ainda não foram vistos
+- Pessimista: acolhe o risco e pergunta o que há de oportunidade
+- Detalhista: trabalha os dados e pergunta o que o panorama mostra
+- Visionário: celebra a visão e pergunta o que vai fazer amanhã
+- Curto prazo: ancora no imediato e pergunta o que isso constrói em 3 anos
 
-QUANDO APROFUNDAR — NÃO AVANCE SE:
+QUANDO APROFUNDAR:
 - Resposta curta para algo que merecia mais
 - Inconsistência com o que disse antes
 - A resposta tocou em emoção
-- Usou "faz sentido", "vou pensar" ou "no meu caso é diferente" — objeção velada, investigue
+- Usou "faz sentido", "vou pensar" ou "no meu caso é diferente" — objeção velada
 
 AS 4 FASES (use internamente, nunca rotule prematuramente):
 - Consolidação dos Resultados: foco em caixa e vendas
@@ -216,212 +438,124 @@ REGRAS ABSOLUTAS:
 - Nunca mais de 3 parágrafos curtos por resposta
 - Sempre terminar com uma única pergunta
 - Nunca assumir a causa de um problema — perguntar até entender
-- Nunca listas de dicas ou análises longas
 - A pergunta certa vale mais que qualquer análise
 
 QUANDO GERAR O RELATÓRIO FINAL:
-Após investigação suficiente (pelo menos 6 a 8 trocas), o empresário pode pedir o diagnóstico ou você pode perceber que tem informação suficiente. Nesse momento, responda EXCLUSIVAMENTE com um JSON válido no seguinte formato — sem texto antes ou depois:
+Após investigação suficiente (pelo menos 6 a 8 trocas), responda EXCLUSIVAMENTE com JSON válido — sem texto antes ou depois:
 
 {
   "tipo": "relatorio",
-  "fase": "Nome da fase atual",
-  "fase_desc": "Descrição em 2 frases do que isso significa para ele",
+  "fase": "Nome da fase",
+  "fase_desc": "2 frases sobre o que isso significa para ele",
   "problemas": [
     {"titulo": "...", "criticidade": "alta|media|baixa", "descricao": "..."},
     {"titulo": "...", "criticidade": "alta|media|baixa", "descricao": "..."},
     {"titulo": "...", "criticidade": "alta|media|baixa", "descricao": "..."}
   ],
-  "acoes": [
-    "Ação concreta 1 para os próximos 14 dias",
-    "Ação concreta 2",
-    "Ação concreta 3",
-    "Ação concreta 4"
-  ],
-  "comprometimento_obs": "Observação sobre o comprometimento declarado e o que foi percebido na conversa",
-  "proximo_passo": "Uma frase sobre o que acontece depois deste diagnóstico"
-}
+  "acoes": ["Ação 1 para os próximos 14 dias","Ação 2","Ação 3","Ação 4"],
+  "comprometimento_obs": "Observação sobre comprometimento",
+  "proximo_passo": "Uma frase sobre o que acontece depois"
+}`;
 
-CONTEXTO:
-Você está conduzindo o diagnóstico de um empresário. As respostas do pré-diagnóstico são pontos de partida — não conclusões. Fale pouco. Pergunte muito. Escute tudo. Conduza como um sócio que se importa de verdade.`;
-
-// ─── ETAPAS ───
 const steps = [
-  { id: 'intro', type: 'intro' },
-  { id: 'nome', type: 'text', nav: 'Identificação',
-    q: 'Qual é o seu nome e o nome da sua empresa?',
-    hint: 'Vamos começar pelo básico — quero saber com quem estou falando.',
-    ph: 'Ex: Carlos Silva — Distribuidora Alfa Ltda' },
-  { id: 'nicho', type: 'text', nav: 'Mercado e segmento',
-    q: 'O que sua empresa faz, para quem vende e em qual mercado atua?',
-    hint: 'Descreva com suas palavras — produto ou serviço, perfil de cliente e região.',
-    ph: 'Ex: Transportadora de cargas, atende indústrias no ES e MG...' },
-  { id: 'funcionarios', type: 'options', nav: 'Estrutura da equipe',
-    q: 'Quantos colaboradores sua empresa tem hoje?',
-    hint: 'Inclua funcionários diretos e terceiros que trabalham com regularidade.',
-    opts: ['10 a 20 colaboradores','21 a 50 colaboradores','51 a 100 colaboradores','Mais de 100 colaboradores'] },
-  { id: 'papel', type: 'options', nav: 'Seu papel no negócio',
-    q: 'Como você descreveria onde passa a maior parte do seu tempo hoje?',
-    hint: 'Não onde você gostaria de estar — onde você realmente está.',
-    opts: [
-      'No operacional — resolvo problemas, atendo clientes, faço o que a equipe não faz',
-      'Dividido — metade operacional, metade gestão e estratégia',
-      'Na gestão — acompanho indicadores e lidero a equipe',
-      'No estratégico — tenho gestores que cuidam do dia a dia por mim'
-    ]},
-  { id: 'ausencia', type: 'options', nav: 'Donodependência',
-    q: 'Se você ficasse 15 dias fora — sem celular, sem WhatsApp — o que aconteceria?',
-    hint: 'Esta é uma das perguntas mais reveladoras do processo. Seja honesto.',
-    opts: [
-      'A empresa travaria em poucos dias — decisões e problemas dependem de mim',
-      'Algumas áreas continuariam, mas as decisões importantes esperariam meu retorno',
-      'A equipe tocaria a operação, mas eu ficaria ansioso sem acompanhar',
-      'A empresa funcionaria normalmente — tenho gestores preparados para isso'
-    ]},
-  { id: 'decisoes', type: 'text', nav: 'Poder de decisão',
-    q: 'Quais decisões ainda dependem exclusivamente de você para acontecer?',
-    hint: 'Pense nas últimas semanas. Que tipos de decisão sempre chegam até você mesmo quando não deveriam?',
-    ph: 'Ex: aprovação de descontos, contratações, resolução de conflitos entre equipe...' },
-  { id: 'maior_dor', type: 'text', nav: 'Principal desafio',
-    q: 'O que está travando o crescimento da sua empresa hoje?',
-    hint: 'Fale sem filtro. Não existe resposta certa — quero entender o que pesa mais quando você pensa no negócio.',
-    ph: 'Descreva com suas palavras o que está travando...' },
-  { id: 'vendas', type: 'options', nav: 'Operação comercial',
-    q: 'Qual é a maior dificuldade da sua operação comercial hoje?',
-    hint: 'Escolha o que mais representa sua realidade atual.',
-    opts: [
-      'Falta de clientes novos — nossa base não cresce',
-      'Ticket médio baixo — vendemos muito mas o lucro não aparece',
-      'Clientes não voltam a comprar',
-      'Não temos processo de vendas — cada um vende do seu jeito',
-      'Dependo demais de mim para fechar — sem mim as vendas caem'
-    ]},
-  { id: 'lideranca', type: 'options', nav: 'Liderança intermediária',
-    q: 'Você tem gerentes ou supervisores entre você e o time operacional?',
-    hint: 'Existe uma camada de gestão no meio — ou tudo sobe direto até você?',
-    opts: [
-      'Não — tudo sobe direto até mim',
-      'Tenho algumas pessoas em posição de liderança, mas ainda muito dependentes de mim',
-      'Tenho líderes intermediários que funcionam razoavelmente bem',
-      'Tenho gestores preparados que tomam decisões com autonomia real'
-    ]},
-  { id: 'planejamento', type: 'options', nav: 'Planejamento e metas',
-    q: 'Como está o planejamento estratégico da sua empresa?',
-    hint: 'Não como deveria estar — como realmente está.',
-    opts: [
-      'Não temos planejamento formal — reagimos ao que aparece',
-      'Tenho metas na cabeça mas não documentadas nem compartilhadas',
-      'Temos metas documentadas mas raramente acompanhamos os resultados',
-      'Temos metas claras e as revisamos regularmente com a equipe'
-    ]},
-  { id: 'pdca', type: 'options', nav: 'Execução e aprendizado',
-    q: 'Quando vocês iniciam uma nova iniciativa, o que geralmente acontece?',
-    hint: 'Pense nas últimas 3 ou 4 iniciativas da empresa.',
-    opts: [
-      'Começamos com energia mas as coisas ficam sem conclusão',
-      'Executamos mas raramente checamos os resultados',
-      'Checamos mas não ajustamos o que não funcionou',
-      'Planejamos, executamos, checamos e aprendemos — o ciclo fecha'
-    ]},
-  { id: 'objetivo', type: 'text', nav: 'Visão de futuro',
-    q: 'Se em 12 meses o Engrene 360 entregar o que você espera, o que terá mudado?',
-    hint: 'Seja específico. Pense em números, em como vai ser seu dia a dia, no que você vai poder fazer que hoje não consegue.',
-    ph: 'Descreva o resultado ideal com o máximo de concretude possível...' },
-  { id: 'comprometimento', type: 'scale', nav: 'Comprometimento',
-    q: 'De 0 a 10, o quanto você está disposto a mudar comportamentos e hábitos?',
-    hint: '0 = não estou pronto para mudar nada / 10 = farei o que for necessário, sem desculpa' },
-  { id: 'chat', type: 'chat', nav: 'Conversa com o agente' }
+  { id:'intro', type:'intro' },
+  { id:'nome', type:'text', nav:'Identificação', q:'Qual é o seu nome e o da sua empresa?', hint:'Vamos começar pelo básico — quero saber com quem estou falando.', ph:'Ex: Carlos Silva — Distribuidora Alfa Ltda' },
+  { id:'nicho', type:'text', nav:'Mercado e segmento', q:'O que sua empresa faz e quem é o seu cliente principal?', hint:'Descreva o que você vende, para quem vende e em qual região ou canal atua.', ph:'Ex: Transportadora de cargas, atende indústrias no ES e MG...' },
+  { id:'funcionarios', type:'options', nav:'Estrutura da equipe', q:'Quantos colaboradores sua empresa tem hoje?', hint:'Inclua funcionários diretos e terceiros que trabalham com regularidade.', opts:['10 a 20 colaboradores','21 a 50 colaboradores','51 a 100 colaboradores','Mais de 100 colaboradores'] },
+  { id:'papel', type:'options', nav:'Seu papel no negócio', q:'Como você descreveria onde passa a maior parte do seu tempo hoje?', hint:'Não onde você gostaria de estar — onde você realmente está.', opts:['No operacional — resolvo problemas, atendo clientes, faço o que a equipe não faz','Dividido — metade operacional, metade gestão e estratégia','Na gestão — acompanho indicadores e lidero a equipe','No estratégico — tenho gestores que cuidam do dia a dia por mim'] },
+  { id:'ausencia', type:'options', nav:'Donodependência', q:'Se você ficasse 15 dias fora — sem celular, sem WhatsApp — o que aconteceria?', hint:'Esta é uma das perguntas mais reveladoras do processo. Seja honesto.', opts:['A empresa travaria em poucos dias — decisões e problemas dependem de mim','Algumas áreas continuariam, mas decisões importantes esperariam meu retorno','A equipe tocaria a operação, mas eu ficaria ansioso sem acompanhar','A empresa funcionaria normalmente — tenho gestores preparados para isso'] },
+  { id:'decisoes', type:'text', nav:'Poder de decisão', q:'Quais decisões ainda dependem exclusivamente de você para acontecer?', hint:'Pense nas últimas semanas — que decisões chegaram até você e que poderiam ter sido tomadas por outra pessoa?', ph:'Ex: aprovação de descontos, contratações, resolução de conflitos...' },
+  { id:'maior_dor', type:'text', nav:'Principal desafio', q:'O que está travando o crescimento da sua empresa hoje?', hint:'Fale sem filtro. Não existe resposta certa — quero entender o que pesa mais.', ph:'Descreva com suas palavras o que está travando...' },
+  { id:'vendas', type:'options', nav:'Operação comercial', q:'Qual é a maior dificuldade da sua operação comercial hoje?', hint:'Escolha o que mais representa sua realidade atual.', opts:['Falta de clientes novos — nossa base não cresce','Ticket médio baixo — vendemos muito mas o lucro não aparece','Clientes não voltam a comprar','Não temos processo de vendas — cada um vende do seu jeito','Dependo demais de mim para fechar — sem mim as vendas caem'] },
+  { id:'lideranca', type:'options', nav:'Liderança intermediária', q:'Você tem gerentes ou supervisores entre você e o time operacional?', hint:'Pense em quem toma decisões quando você não está disponível.', opts:['Não — tudo sobe direto até mim','Tenho algumas pessoas em liderança, mas ainda muito dependentes de mim','Tenho líderes intermediários que funcionam razoavelmente bem','Tenho gestores que tomam decisões com autonomia real'] },
+  { id:'planejamento', type:'options', nav:'Planejamento e metas', q:'Como está o planejamento estratégico da sua empresa?', hint:'Não como deveria estar — como realmente está.', opts:['Não temos planejamento formal — reagimos ao que aparece','Tenho metas na cabeça mas não documentadas nem compartilhadas','Temos metas documentadas mas raramente acompanhamos','Temos metas claras e as revisamos regularmente com a equipe'] },
+  { id:'pdca', type:'options', nav:'Execução e aprendizado', q:'Quando vocês iniciam uma nova iniciativa, o que geralmente acontece?', hint:'Pense nas últimas 3 ou 4 iniciativas da empresa.', opts:['Começamos com energia mas as coisas ficam sem conclusão','Executamos mas raramente checamos os resultados','Checamos mas não ajustamos o que não funcionou','Planejamos, executamos, checamos e aprendemos — o ciclo fecha'] },
+  { id:'objetivo', type:'text', nav:'Visão de futuro', q:'Se em 12 meses o Engrene 360 entregar o que você espera, o que terá mudado?', hint:'Descreva o resultado mais importante que você quer ver — pode ser em números, no seu dia a dia ou na sua liberdade.', ph:'Descreva o resultado ideal com o máximo de concretude possível...' },
+  { id:'comprometimento', type:'scale', nav:'Comprometimento', q:'De 0 a 10, o quanto você está disposto a mudar comportamentos e hábitos?', hint:'0 = não estou pronto para mudar nada / 10 = farei o que for necessário' },
+  { id:'chat', type:'chat', nav:'Conversa com o agente' }
 ];
 
-let cur = 0;
-let ans = {};
-let hist = [];
-let busy = false;
+let cur = 0, ans = {}, hist = [], busy = false;
 
-// ─── STORAGE ───
-const STORAGE_KEY = 'engrene360_session';
 function saveState() {
-  try { window.storage && window.storage.set(STORAGE_KEY, JSON.stringify({ cur, ans })); } catch(e) {}
-  try { sessionStorage.setItem(STORAGE_KEY, JSON.stringify({ cur, ans })); } catch(e) {}
+  try { sessionStorage.setItem('e360', JSON.stringify({cur,ans})); } catch(e){}
 }
 function loadState() {
-  try {
-    const raw = sessionStorage.getItem(STORAGE_KEY);
-    if (raw) { const s = JSON.parse(raw); cur = s.cur || 0; ans = s.ans || {}; }
-  } catch(e) {}
+  try { const s=JSON.parse(sessionStorage.getItem('e360')||'{}'); if(s.cur){cur=s.cur;ans=s.ans||{};} } catch(e){}
 }
 
-// ─── NAVEGAÇÃO ───
-function updateNav() {
-  const navSteps = steps.filter(s => s.nav);
-  document.getElementById('nav-list').innerHTML = navSteps.map(s => {
-    const idx = steps.indexOf(s);
-    const state = idx < cur ? 'done' : idx === cur ? 'active' : '';
+function updateUI() {
+  const navSteps = steps.filter(s=>s.nav);
+  document.getElementById('nav-list').innerHTML = navSteps.map(s=>{
+    const idx=steps.indexOf(s);
+    const state=idx<cur?'done':idx===cur?'active':'';
     return `<div class="nav-item ${state}"><div class="nav-dot"></div>${s.nav}</div>`;
   }).join('');
-  const pct = Math.round((cur / (steps.length - 1)) * 100);
-  document.getElementById('prog').style.width = pct + '%';
+  const pct=Math.round((cur/(steps.length-1))*100);
+  document.getElementById('prog').style.width=pct+'%';
+  const mobStep=document.getElementById('mob-step');
+  if(mobStep){ const s=steps[cur]; mobStep.textContent=s.nav||''; }
 }
 
-// ─── RENDER ───
 function render() {
-  updateNav();
-  saveState();
-  const step = steps[cur];
-  const scr = document.getElementById('screen');
-  if (step.type === 'intro') { renderIntro(scr); return; }
-  if (step.type === 'chat') { renderChat(scr); return; }
+  updateUI(); saveState();
+  const step=steps[cur], scr=document.getElementById('screen');
+  if(step.type==='intro'){renderIntro(scr);return;}
+  if(step.type==='chat'){renderChat(scr);return;}
 
-  const badge = `Etapa ${cur} de ${steps.length - 2}`;
-  let inp = '';
+  const badge=`Etapa ${cur} de ${steps.length-2}`;
+  let inp='';
 
-  if (step.type === 'text') {
-    inp = `<textarea id="inp" placeholder="${step.ph||''}" rows="5">${ans[step.id]||''}</textarea>`;
-  } else if (step.type === 'options') {
-    inp = `<div class="options-list">${step.opts.map(o =>
+  if(step.type==='text'){
+    inp=`<textarea id="inp" placeholder="${step.ph||''}" rows="4">${ans[step.id]||''}</textarea>`;
+  } else if(step.type==='options'){
+    inp=`<div class="options-list">${step.opts.map(o=>
       `<button class="opt${ans[step.id]===o?' selected':''}" onclick="pickOpt('${step.id}','${o.replace(/'/g,"\\'")}',this)">${o}</button>`
     ).join('')}</div>`;
-  } else if (step.type === 'scale') {
-    const sel = ans[step.id];
-    inp = `<div class="scale-wrap">${Array.from({length:11},(_,i)=>
+  } else if(step.type==='scale'){
+    const sel=ans[step.id];
+    inp=`<div class="scale-wrap">${Array.from({length:11},(_,i)=>
       `<button class="scale-btn${sel===i?' selected':''}" onclick="pickScale('${step.id}',${i},this)">${i}</button>`
     ).join('')}</div>
-    <div class="scale-labels"><span>Não estou pronto</span><span>Farei o que for necessário</span></div>`;
+    <div class="scale-labels"><span>Não estou pronto</span><span>Farei o necessário</span></div>`;
   }
 
-  scr.innerHTML = `
+  scr.innerHTML=`
     <div class="content">
       <div class="step-badge">${badge}</div>
       <h1 class="q-title">${step.q}</h1>
-      ${step.hint ? `<p class="q-hint">${step.hint}</p>` : ''}
+      ${step.hint?`<p class="q-hint">${step.hint}</p>`:''}
       ${inp}
       <div class="nav-buttons">
-        ${cur > 1 ? `<button class="btn-back" onclick="goBack()">← Voltar</button>` : '<span></span>'}
+        ${cur>1?`<button class="btn-back" onclick="goBack()">← Voltar</button>`:'<span></span>'}
         <button class="btn-next" onclick="goNext()">
-          ${cur === steps.length - 2 ? 'Iniciar conversa →' : 'Continuar →'}
+          ${cur===steps.length-2?'Iniciar conversa →':'Continuar →'}
         </button>
       </div>
     </div>`;
 
-  if (step.type === 'text') {
-    const ta = document.getElementById('inp');
-    if (ta) ta.addEventListener('input', () => { ans[step.id] = ta.value; });
+  if(step.type==='text'){
+    const ta=document.getElementById('inp');
+    if(ta) ta.addEventListener('input',()=>{ans[step.id]=ta.value;});
   }
+  // Scroll to top on step change
+  window.scrollTo(0,0);
 }
 
 function renderIntro(scr) {
-  scr.innerHTML = `
+  scr.innerHTML=`
     <div class="content">
       <div class="intro-block">
         <span class="intro-tag">Diagnóstico Empresarial</span>
         <h1 class="intro-title">Antes de mudar o negócio,<br><em>é preciso enxergá-lo.</em></h1>
-        <p class="intro-body">Este diagnóstico foi desenvolvido para revelar o que você ainda não consegue ver de dentro. Não existe resposta certa ou errada — existe honestidade. Quanto mais honesto você for, mais preciso será o que vamos construir juntos.</p>
+        <p class="intro-body">Este diagnóstico foi desenvolvido para revelar o que você ainda não consegue ver de dentro. Não existe resposta certa ou errada — existe honestidade.</p>
         <div class="intro-items">
-          <div class="intro-item">15 a 20 minutos do seu tempo</div>
-          <div class="intro-item">13 perguntas sobre o seu negócio</div>
-          <div class="intro-item">Conversa em tempo real com o agente</div>
-          <div class="intro-item">Diagnóstico com grau de criticidade</div>
-          <div class="intro-item">Plano de ação para os próximos 14 dias</div>
-          <div class="intro-item">Encaminhamento para Eliudem Galvão</div>
+          <div class="intro-item">15 a 20 minutos</div>
+          <div class="intro-item">13 perguntas</div>
+          <div class="intro-item">Conversa com o agente</div>
+          <div class="intro-item">Diagnóstico com criticidade</div>
+          <div class="intro-item">Plano de ação — 14 dias</div>
+          <div class="intro-item">Encaminhamento para Eliudem</div>
         </div>
         <button class="btn-start" onclick="goNext()">Começar o diagnóstico →</button>
       </div>
@@ -429,143 +563,111 @@ function renderIntro(scr) {
 }
 
 function renderChat(scr) {
-  scr.innerHTML = `
+  scr.innerHTML=`
     <div class="chat-screen">
       <div class="chat-header">
-        <h2>Conversa com o Agente Engrene 360</h2>
-        <p>O agente aprofundará o diagnóstico e construirá seu plano de ação. Seja direto e honesto.</p>
+        <h2>Agente Engrene 360</h2>
+        <p>Diagnóstico em andamento — responda com honestidade.</p>
       </div>
       <div class="chat-messages" id="msgs"></div>
       <div class="chat-input-area">
         <textarea class="chat-input" id="cinp" placeholder="Escreva aqui..." rows="1"
           onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
-        <button class="btn-send" id="bsend" onclick="send()" title="Enviar">→</button>
+        <button class="btn-send" id="bsend" onclick="send()">→</button>
       </div>
     </div>`;
 
-  const nome = (ans.nome || '').split(/[\s—\-]/)[0] || 'você';
-  const open = `${nome}, li suas respostas com atenção. Obrigado pela honestidade — é o que torna esse processo real.\n\nAntes de qualquer análise da minha parte, quero entender melhor o que você está vivendo. Me conta: no dia a dia, o que mais consome sua energia agora?`;
-  addMsg('agent', open);
-  hist.push({ role: 'assistant', content: open });
+  const nome=(ans.nome||'').split(/[\s—\-]/)[0]||'você';
+  const open=`${nome}, li suas respostas com atenção. Obrigado pela honestidade — é o que torna esse processo real.\n\nAntes de qualquer análise da minha parte, quero entender melhor o que você está vivendo. Me conta: no dia a dia, o que mais consome sua energia agora?`;
+  addMsg('agent',open);
+  hist.push({role:'assistant',content:open});
 }
 
-// ─── CHAT ───
-function addMsg(role, content) {
-  const msgs = document.getElementById('msgs');
-  if (!msgs) return;
-
-  // Tenta parsear como relatório
-  if (role === 'agent') {
-    try {
-      const trimmed = content.trim();
-      const jsonStart = trimmed.indexOf('{');
-      const jsonEnd = trimmed.lastIndexOf('}');
-      if (jsonStart !== -1 && jsonEnd !== -1) {
-        const data = JSON.parse(trimmed.slice(jsonStart, jsonEnd + 1));
-        if (data.tipo === 'relatorio') { renderReport(data); return; }
+function addMsg(role,content) {
+  const msgs=document.getElementById('msgs');
+  if(!msgs) return;
+  try {
+    if(role==='agent'){
+      const t=content.trim();
+      const js=t.indexOf('{'), je=t.lastIndexOf('}');
+      if(js!==-1&&je!==-1){
+        const data=JSON.parse(t.slice(js,je+1));
+        if(data.tipo==='relatorio'){renderReport(data);return;}
       }
-    } catch(e) {}
-  }
+    }
+  } catch(e){}
 
-  const div = document.createElement('div');
-  div.className = `msg ${role}`;
-  const av = role === 'agent' ? 'EG' : 'V';
-  const fmt = content
-    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-    .split('\n\n').map(p => `<p>${p.replace(/\n/g,'<br>')}</p>`).join('');
-  div.innerHTML = `<div class="msg-av">${av}</div><div class="msg-bubble">${fmt}</div>`;
+  const div=document.createElement('div');
+  div.className=`msg ${role}`;
+  const av=role==='agent'?'EG':'V';
+  const fmt=content
+    .replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>')
+    .split('\n\n').map(p=>`<p>${p.replace(/\n/g,'<br>')}</p>`).join('');
+  div.innerHTML=`<div class="msg-av">${av}</div><div class="msg-bubble">${fmt}</div>`;
   msgs.appendChild(div);
-  msgs.scrollTop = msgs.scrollHeight;
+  msgs.scrollTop=msgs.scrollHeight;
 }
 
 function renderReport(data) {
-  const msgs = document.getElementById('msgs');
-  if (!msgs) return;
-
-  const critMap = { alta: 'Alta', media: 'Média', baixa: 'Baixa' };
-  const probsHtml = (data.problemas || []).map(p => `
+  const msgs=document.getElementById('msgs');
+  if(!msgs) return;
+  const critMap={alta:'Alta',media:'Média',baixa:'Baixa'};
+  const probs=(data.problemas||[]).map(p=>`
     <div class="r-card">
-      <span class="crit ${p.criticidade}">${critMap[p.criticidade] || p.criticidade}</span>
-      <h3>${p.titulo}</h3>
-      <p>${p.descricao}</p>
+      <span class="crit ${p.criticidade}">${critMap[p.criticidade]||p.criticidade}</span>
+      <h3>${p.titulo}</h3><p>${p.descricao}</p>
     </div>`).join('');
-
-  const acoesHtml = (data.acoes || []).map((a, i) => `
+  const acoes=(data.acoes||[]).map((a,i)=>`
     <li><div class="a-num">${i+1}</div><span>${a}</span></li>`).join('');
-
-  const div = document.createElement('div');
-  div.className = 'report-wrap';
-  div.innerHTML = `
+  const div=document.createElement('div');
+  div.className='report-wrap';
+  div.innerHTML=`
     <div class="report-hdr">
       <h1>Diagnóstico Engrene 360</h1>
-      <p>Gerado com base na conversa — para revisão e acompanhamento com o consultor.</p>
+      <p>Gerado com base na conversa.</p>
     </div>
     <div class="r-section">
-      <p class="r-title">Fase atual do negócio</p>
-      <div class="r-card">
-        <span class="fase-pill">${data.fase}</span>
-        <p>${data.fase_desc}</p>
-      </div>
+      <p class="r-title">Fase atual</p>
+      <div class="r-card"><span class="fase-pill">${data.fase}</span><p>${data.fase_desc}</p></div>
     </div>
     <div class="r-section">
-      <p class="r-title">Pontos críticos identificados</p>
-      ${probsHtml}
+      <p class="r-title">Pontos críticos</p>${probs}
     </div>
     <div class="r-section">
-      <p class="r-title">Plano de ação — próximos 14 dias</p>
-      <div class="r-card">
-        <ul class="action-list">${acoesHtml}</ul>
-      </div>
+      <p class="r-title">Plano de ação — 14 dias</p>
+      <div class="r-card"><ul class="action-list">${acoes}</ul></div>
     </div>
-    ${data.comprometimento_obs ? `
-    <div class="r-section">
-      <p class="r-title">Observação sobre comprometimento</p>
-      <div class="r-card"><p>${data.comprometimento_obs}</p></div>
-    </div>` : ''}
-    <div class="report-footer">
-      <strong>Próximo passo:</strong> ${data.proximo_passo}
-    </div>`;
-
+    ${data.comprometimento_obs?`<div class="r-section"><p class="r-title">Comprometimento</p><div class="r-card"><p>${data.comprometimento_obs}</p></div></div>`:''}
+    <div class="report-footer"><strong>Próximo passo:</strong> ${data.proximo_passo}</div>`;
   msgs.appendChild(div);
-  msgs.scrollTop = msgs.scrollHeight;
-
-  // Salva diagnóstico no servidor (Google Sheets)
-  try {
-    fetch('/api/salvar', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ answers: ans, relatorio: data })
-    });
-  } catch(e) { console.warn('Diagnóstico não salvo:', e); }
+  msgs.scrollTop=msgs.scrollHeight;
+  try{fetch('/api/salvar',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({answers:ans,relatorio:data})});}catch(e){}
 }
 
 function showTyping() {
-  const msgs = document.getElementById('msgs');
-  if (!msgs) return;
-  const div = document.createElement('div');
-  div.className = 'msg agent'; div.id = 'typing';
-  div.innerHTML = `<div class="msg-av">EG</div><div class="msg-bubble"><div class="typing"><span></span><span></span><span></span></div></div>`;
-  msgs.appendChild(div);
-  msgs.scrollTop = msgs.scrollHeight;
+  const msgs=document.getElementById('msgs');
+  if(!msgs) return;
+  const d=document.createElement('div');
+  d.className='msg agent';d.id='typing';
+  d.innerHTML='<div class="msg-av">EG</div><div class="msg-bubble"><div class="typing"><span></span><span></span><span></span></div></div>';
+  msgs.appendChild(d);msgs.scrollTop=msgs.scrollHeight;
 }
-function hideTyping() { const t = document.getElementById('typing'); if (t) t.remove(); }
+function hideTyping(){const t=document.getElementById('typing');if(t)t.remove();}
 
-function handleKey(e) { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(); } }
-function autoResize(el) { el.style.height = 'auto'; el.style.height = Math.min(el.scrollHeight, 150) + 'px'; }
+function handleKey(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();send();}}
+function autoResize(el){el.style.height='auto';el.style.height=Math.min(el.scrollHeight,120)+'px';}
 
 async function send() {
-  const inp = document.getElementById('cinp');
-  const btn = document.getElementById('bsend');
-  const txt = (inp?.value || '').trim();
-  if (!txt || busy) return;
-
-  addMsg('user', txt);
-  hist.push({ role: 'user', content: txt });
-  inp.value = ''; inp.style.height = 'auto';
-  busy = true; if (btn) btn.disabled = true;
+  const inp=document.getElementById('cinp'),btn=document.getElementById('bsend');
+  const txt=(inp?.value||'').trim();
+  if(!txt||busy) return;
+  addMsg('user',txt);
+  hist.push({role:'user',content:txt});
+  inp.value='';inp.style.height='auto';
+  busy=true;if(btn)btn.disabled=true;
   showTyping();
 
-  const ctx = `RESPOSTAS DO PRÉ-DIAGNÓSTICO:
+  const ctx=`RESPOSTAS DO PRÉ-DIAGNÓSTICO:
 Nome/Empresa: ${ans.nome||'—'}
 Segmento: ${ans.nicho||'—'}
 Colaboradores: ${ans.funcionarios||'—'}
@@ -578,71 +680,54 @@ Liderança intermediária: ${ans.lideranca||'—'}
 Planejamento: ${ans.planejamento||'—'}
 Execução/PDCA: ${ans.pdca||'—'}
 Objetivo 12 meses: ${ans.objetivo||'—'}
-Comprometimento declarado: ${ans.comprometimento!==undefined?ans.comprometimento+'/10':'—'}`;
+Comprometimento: ${ans.comprometimento!==undefined?ans.comprometimento+'/10':'—'}`;
 
-  const messages = [
-    { role: 'user', content: ctx + '\n\n---\nInício da conversa:' },
-    ...hist.slice(0, -1),
-    { role: 'user', content: txt }
+  const messages=[
+    {role:'user',content:ctx+'\n\n---\nInício da conversa:'},
+    ...hist.slice(0,-1),
+    {role:'user',content:txt}
   ];
 
   try {
-    const res = await fetch('/api/chat', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 1000,
-        system: SYS,
-        messages
-      })
+    const res=await fetch('/api/chat',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({messages})
     });
-    const data = await res.json();
+    const data=await res.json();
     hideTyping();
-    const reply = data?.content?.[0]?.text || 'Não consegui processar. Tente novamente.';
-    addMsg('agent', reply);
-    hist.push({ role: 'assistant', content: reply });
-  } catch(e) {
+    const reply=data?.text||'Não consegui processar. Tente novamente.';
+    addMsg('agent',reply);
+    hist.push({role:'assistant',content:reply});
+  } catch(e){
     hideTyping();
-    addMsg('agent', 'Erro de conexão. Por favor, tente novamente.');
+    addMsg('agent','Erro de conexão. Tente novamente.');
   }
-
-  busy = false; if (btn) btn.disabled = false;
+  busy=false;if(btn)btn.disabled=false;
   document.getElementById('cinp')?.focus();
 }
 
-// ─── CONTROLES ───
-function pickOpt(id, val, el) {
-  ans[id] = val;
-  document.querySelectorAll('.opt').forEach(b => b.classList.remove('selected'));
-  el.classList.add('selected');
-}
-function pickScale(id, val, el) {
-  ans[id] = val;
-  document.querySelectorAll('.scale-btn').forEach(b => b.classList.remove('selected'));
-  el.classList.add('selected');
-}
-function canGo() {
-  const s = steps[cur];
-  if (s.type === 'intro') return true;
-  if (s.type === 'text') return (ans[s.id]||'').trim().length > 3;
-  if (s.type === 'options') return !!ans[s.id];
-  if (s.type === 'scale') return ans[s.id] !== undefined;
+function pickOpt(id,val,el){ans[id]=val;document.querySelectorAll('.opt').forEach(b=>b.classList.remove('selected'));el.classList.add('selected');}
+function pickScale(id,val,el){ans[id]=val;document.querySelectorAll('.scale-btn').forEach(b=>b.classList.remove('selected'));el.classList.add('selected');}
+function canGo(){
+  const s=steps[cur];
+  if(s.type==='intro') return true;
+  if(s.type==='text') return (ans[s.id]||'').trim().length>3;
+  if(s.type==='options') return !!ans[s.id];
+  if(s.type==='scale') return ans[s.id]!==undefined;
   return true;
 }
-function goNext() {
-  if (!canGo()) {
-    const btn = document.querySelector('.btn-next');
-    if (btn) { const orig = btn.innerHTML; btn.style.background='#A32D2D'; btn.textContent='Preencha antes de continuar'; setTimeout(()=>{ btn.style.background=''; btn.innerHTML=orig; },1500); }
+function goNext(){
+  if(!canGo()){
+    const btn=document.querySelector('.btn-next,.btn-start');
+    if(btn){const o=btn.innerHTML;btn.style.background='#A32D2D';btn.textContent='Preencha antes de continuar';setTimeout(()=>{btn.style.background='';btn.innerHTML=o;},1400);}
     return;
   }
-  if (cur < steps.length - 1) { cur++; render(); }
+  if(cur<steps.length-1){cur++;render();}
 }
-function goBack() { if (cur > 0) { cur--; render(); } }
+function goBack(){if(cur>0){cur--;render();}}
 
-// ─── INIT ───
-loadState();
-render();
+loadState();render();
 </script>
 </body>
 </html>
