@@ -1,0 +1,13 @@
+{
+  "name": "engrene360-backend",
+  "version": "1.0.0",
+  "description": "Backend seguro do Agente Engrene 360",
+  "private": true,
+  "scripts": {
+    "dev": "vercel dev"
+  },
+  "dependencies": {
+    "openai": "^4.47.0",
+    "googleapis": "^137.1.0"
+  }
+}
